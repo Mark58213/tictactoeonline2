@@ -126,4 +126,26 @@ function checkWinner(board) {
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`Сервер запущен на порту ${PORT}`);
+
+});
+// Добавьте в server.js обработчик leaveGame
+socket.on('leaveGame', (gameId) => {
+    const game = games[gameId];
+    if (game) {
+        // Удаляем игрока из игры
+        const playerIndex = game.players.indexOf(socket.id);
+        if (playerIndex > -1) {
+            game.players.splice(playerIndex, 1);
+        }
+        
+        // Если в игре не осталось игроков, удаляем игру
+        if (game.players.length === 0) {
+            delete games[gameId];
+        } else {
+            // Уведомляем оставшегося игрока
+            io.to(gameId).emit('playerLeft');
+        }
+    }
+    
+    delete players[socket.id];
 });
