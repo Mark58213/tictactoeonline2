@@ -1,52 +1,63 @@
-// Главная страница
-if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-    document.getElementById('createGame')?.addEventListener('click', () => {
-        socket.emit('createGame');
-    });
-
-    document.getElementById('joinGame')?.addEventListener('click', () => {
-        const gameId = document.getElementById('gameId').value.trim().toUpperCase();
-        if (gameId.length === 6) {
-            joinGame(gameId);
-        } else {
-            alert('Введите корректный код игры (6 символов)');
-        }
-    });
-
-    // Автоматическое присоединение по ссылке с кодом
-    function joinGame(gameId) {
-        socket.emit('joinGame', gameId);
+// Страница игры
+if (window.location.pathname === '/game.html') {
+    const urlParams = new URLSearchParams(window.location.search);
+    const gameId = urlParams.get('game');
+    
+    if (gameId) {
+        currentGameId = gameId;
+        document.getElementById('currentGameId').textContent = gameId;
+        initializeGame();
+    } else {
+        // Если нет кода игры, проверяем, не создаем ли мы игру
+        checkIfCreatingGame();
     }
 
-    socket.on('gameCreated', ({ gameId, symbol }) => {
-        const link = `${window.location.origin}/game.html?game=${gameId}`;
-        document.getElementById('gameLink').classList.remove('hidden');
-        document.getElementById('linkInput').value = link;
-        document.getElementById('gameCode').textContent = gameId;
-        
-        // Автоматически присоединяем создателя к его же игре
-        setTimeout(() => {
-            joinGame(gameId);
-        }, 500);
+    document.getElementById('backToMenu')?.addEventListener('click', () => {
+        socket.emit('leaveGame', currentGameId);
+        window.location.href = '/';
     });
+
+    document.getElementById('restartGame')?.addEventListener('click', () => {
+        if (confirm('Создать новую игру? Текущая игра будет завершена.')) {
+            socket.emit('leaveGame', currentGameId);
+            window.location.href = '/';
+        }
+    });
+}
+
+function checkIfCreatingGame() {
+    // Проверяем, не был ли пользователь создателем игры
+    const savedGameId = localStorage.getItem('creatingGameId');
+    if (savedGameId) {
+        currentGameId = savedGameId;
+        document.getElementById('currentGameId').textContent = savedGameId;
+        initializeGame();
+    } else {
+        alert('Код игры не указан!');
+        window.location.href = '/';
+    }
+}
+
+function initializeGame() {
+    // Сохраняем gameId в localStorage на случай перезагрузки
+    localStorage.setItem('currentGameId', currentGameId);
+    
+    socket.emit('joinGame', currentGameId);
 
     socket.on('gameJoined', ({ gameId, symbol }) => {
-        // Автоматический переход на страницу игры
-        window.location.href = `/game.html?game=${gameId}`;
-    });
-
-    socket.on('error', (message) => {
-        alert(`Ошибка: ${message}`);
-    });
-
-    // Если в URL уже есть код игры (например, при открытии ссылки)
-    window.addEventListener('DOMContentLoaded', () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const gameIdFromUrl = urlParams.get('game');
+        playerSymbol = symbol;
+        document.getElementById('playerSymbol').textContent = symbol;
+        document.getElementById('playerSymbol').className = `symbol ${symbol.toLowerCase()}`;
+        document.getElementById('waitingMessage').classList.add('hidden');
         
-        if (gameIdFromUrl) {
-            document.getElementById('gameId').value = gameIdFromUrl;
-            document.getElementById('joinGame').click();
-        }
+        // Убираем флаг создания игры
+        localStorage.removeItem('creatingGameId');
+    });
+
+    // ... остальной код initializeGame остается таким же ...
+
+    socket.on('disconnect', () => {
+        localStorage.removeItem('currentGameId');
+        localStorage.removeItem('creatingGameId');
     });
 }
