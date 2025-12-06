@@ -23,15 +23,55 @@
                 </button>
             </div>
             
-            <div id="gameLink" class="hidden">
-                <h3>Ссылка для друга:</h3>
-                <div class="link-container">
-                    <input type="text" id="linkInput" readonly>
-                    <button id="copyLink" class="btn small">Копировать</button>
-                </div>
-                <p>Код игры: <strong id="gameCode"></strong></p>
+            <!-- В index.html найдите блок с id="gameLink" и замените его: -->
+<div id="gameLink" class="hidden">
+    <div class="success-message">
+        <h3>✅ Игра создана успешно!</h3>
+        <p>Вы будете автоматически перенаправлены в игру через 3 секунды...</p>
+    </div>
+    
+    <div class="share-section">
+        <h3>📤 Поделитесь с другом:</h3>
+        
+        <div class="share-option">
+            <h4>Способ 1: Отправьте ссылку</h4>
+            <div class="link-container">
+                <input type="text" id="linkInput" readonly value="Загрузка...">
+                <button id="copyLink" class="btn small">
+                    <span id="copyText">Копировать ссылку</span>
+                    <span id="copiedText" class="hidden">✓ Скопировано!</span>
+                </button>
             </div>
         </div>
+        
+        <div class="share-option">
+            <h4>Способ 2: Отправьте код</h4>
+            <div class="code-container">
+                <div class="game-code-display">
+                    <span id="gameCode" class="code">------</span>
+                    <button id="copyCode" class="btn small code-btn">
+                        Копировать код
+                    </button>
+                </div>
+                <p class="code-hint">Друг должен ввести этот код на главной странице</p>
+            </div>
+        </div>
+        
+        <div class="qr-section hidden" id="qrSection">
+            <h4>Или отсканируйте QR-код:</h4>
+            <div id="qrcode"></div>
+        </div>
+        
+        <div class="action-buttons">
+            <button id="manualJoin" class="btn secondary">
+                Перейти в игру сейчас
+            </button>
+            <button id="newGame" class="btn">
+                Создать новую игру
+            </button>
+        </div>
+    </div>
+</div>
         
         <div class="instructions">
             <h3>Как играть:</h3>
@@ -46,4 +86,5 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
 </body>
+
 </html>
