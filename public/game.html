@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игра - Крестики-Нолики</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Крестики-Нолики</h1>
+        
+        <div id="gameInfo">
+            <p>Код игры: <strong id="currentGameId"></strong></p>
+            <p>Вы играете за: <span id="playerSymbol" class="symbol"></span></p>
+            <p>Сейчас ходит: <span id="currentPlayer" class="symbol"></span></p>
+        </div>
+        
+        <div id="gameBoard" class="board">
+            <div class="cell" data-index="0"></div>
+            <div class="cell" data-index="1"></div>
+            <div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div>
+            <div class="cell" data-index="4"></div>
+            <div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div>
+            <div class="cell" data-index="7"></div>
+            <div class="cell" data-index="8"></div>
+        </div>
+        
+        <div id="message" class="message"></div>
+        
+        <div class="controls">
+            <button id="restartGame" class="btn">Новая игра</button>
+            <button id="backToMenu" class="btn secondary">В меню</button>
+        </div>
+        
+        <div id="waitingMessage" class="message info">
+            Ожидание второго игрока...
+        </div>
+    </div>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+</body>
+</html>

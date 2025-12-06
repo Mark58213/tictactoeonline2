@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Крестики-Нолики Онлайн</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Крестики-Нолики Онлайн</h1>
+        
+        <div class="menu">
+            <button id="createGame" class="btn primary">
+                Создать новую игру
+            </button>
+            
+            <div class="join-section">
+                <h3>Присоединиться к игре:</h3>
+                <input type="text" id="gameId" placeholder="Введите код игры" maxlength="6">
+                <button id="joinGame" class="btn secondary">
+                    Присоединиться
+                </button>
+            </div>
+            
+            <div id="gameLink" class="hidden">
+                <h3>Ссылка для друга:</h3>
+                <div class="link-container">
+                    <input type="text" id="linkInput" readonly>
+                    <button id="copyLink" class="btn small">Копировать</button>
+                </div>
+                <p>Код игры: <strong id="gameCode"></strong></p>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>Как играть:</h3>
+            <ol>
+                <li>Создайте игру и поделитесь кодом с другом</li>
+                <li>Друг вводит код на этом сайте</li>
+                <li>Играйте на разных устройствах!</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+</body>
+</html>
